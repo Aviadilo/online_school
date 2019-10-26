@@ -8,6 +8,7 @@ class Course(models.Model):
     course_owner = models.ForeignKey(
         User,
         verbose_name="Course owner",
+        related_name='owner_courses',
         on_delete=models.CASCADE
     )
 
@@ -19,7 +20,7 @@ class Course(models.Model):
     teachers = models.ManyToManyField(
         User,
         verbose_name='Teachers',
-        related_name='course_teachers',
+        related_name='teacher_courses',
         null=True,
         blank=True
     )
@@ -27,7 +28,7 @@ class Course(models.Model):
     students = models.ManyToManyField(
         User,
         verbose_name='Students',
-        related_name='course_students',
+        related_name='student_courses',
         null=True,
         blank=True
     )
