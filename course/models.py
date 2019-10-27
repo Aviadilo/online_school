@@ -21,7 +21,6 @@ class Course(models.Model):
         User,
         verbose_name='Teachers',
         related_name='teacher_courses',
-        null=True,
         blank=True
     )
 
@@ -29,7 +28,6 @@ class Course(models.Model):
         User,
         verbose_name='Students',
         related_name='student_courses',
-        null=True,
         blank=True
     )
 
