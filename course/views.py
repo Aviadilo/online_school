@@ -8,7 +8,7 @@ from django.db.models import Q
 
 class CourseCreateView(generics.CreateAPIView):
     serializer_class = CourseCreateSerializer
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated,)
 
 
 class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -31,6 +31,7 @@ class CourseUsersView(generics.RetrieveUpdateAPIView):
 class CourseListView(generics.ListAPIView):
     serializer_class = CourseListSerializer
     permission_classes = (IsAuthenticated, IsOwnerOrReadCourseOnly)
+
     def get_queryset(self):
         user = self.request.user
         return Course.objects.filter(Q(course_owner=user) |

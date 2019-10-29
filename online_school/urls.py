@@ -21,5 +21,6 @@ urlpatterns = [
     path('api/v1/base-auth/', include('rest_framework.urls')),
     path('api/v1/course/', include('course.urls')),
     path('api/v1/lecture/', include('lecture.urls')),
-    path('api/v1/hometask/', include('hometask.urls'))
+    path('api/v1/hometask/', include('hometask.urls')),
+    path('api/v1/homework/', include('homework.urls'))
 ]
