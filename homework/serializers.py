@@ -19,4 +19,21 @@ class HomeworkListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Homework
+        fields = ('homework_owner', 'hometask', 'mark', 'created_date', 'updated_date')
+        read_only_fields = ['hometask', 'mark']
+
+
+class HometaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Hometask
+        fields = ('task_body', 'possible_max_mark')
+
+
+class HomeworkDetailSerializer(serializers.ModelSerializer):
+    homework_owner = UserSerializer(read_only=True)
+    hometask = HometaskSerializer(read_only=True)
+
+    class Meta:
+        model = Homework
         fields = ('homework_owner', 'hometask', 'homework_file', 'mark', 'created_date', 'updated_date')
+        read_only_fields = ['hometask', 'mark']
