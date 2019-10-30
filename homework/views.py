@@ -43,3 +43,9 @@ class HomeworkDetailView(generics.RetrieveUpdateDestroyAPIView):
         obj = super().get_object()
         self.request.session['homework'] = obj.id
         return obj
+
+
+class HomeworkMarkDetailView(generics.UpdateAPIView):
+    serializer_class = HomeworkMarkSerializer
+    queryset = Homework.objects.all()
+    permission_classes = (IsAuthenticated, IsTeacher)

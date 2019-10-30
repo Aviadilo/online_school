@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from .models import Homework
-from course.models import Course
 from hometask.models import Hometask
 from course.serializers import UserSerializer
 
@@ -37,3 +36,10 @@ class HomeworkDetailSerializer(serializers.ModelSerializer):
         model = Homework
         fields = ('homework_owner', 'hometask', 'homework_file', 'mark', 'created_date', 'updated_date')
         read_only_fields = ['hometask', 'mark']
+
+
+class HomeworkMarkSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Homework
+        fields = ('mark', )
