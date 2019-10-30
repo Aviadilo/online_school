@@ -1,5 +1,5 @@
 from django.db import models
-from course.models import User
+from user_auth.models import User
 from hometask.models import Hometask
 
 

@@ -1,5 +1,6 @@
 from django.db import models
-from course.models import User, Course
+from course.models import Course
+from user_auth.models import User
 
 
 class Lecture(models.Model):
