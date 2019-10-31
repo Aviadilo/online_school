@@ -30,6 +30,7 @@ class HometaskSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     comment_owner = UserSerializer(read_only=True)
+
     class Meta:
         model = Comment
         fields = ('id', 'comment_owner', 'comment', 'created_date')
@@ -47,10 +48,9 @@ class HomeworkDetailSerializer(serializers.ModelSerializer):
 
 
 class HomeworkMarkSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Homework
-        fields = ('mark', )
+        fields = ('mark',)
 
     def validate(self, attrs):
         homework_id = self.context['request'].session['homework']
@@ -58,3 +58,12 @@ class HomeworkMarkSerializer(serializers.ModelSerializer):
         if attrs['mark'] > max_mark:
             raise serializers.ValidationError("Mark cannot be more than {}".format(max_mark))
         return attrs
+
+
+class CommentCreateSerializer(serializers.ModelSerializer):
+    comment_owner = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = Comment
+        fields = '__all__'
+        read_only_fields = ['homework', ]

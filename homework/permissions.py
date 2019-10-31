@@ -1,6 +1,7 @@
 from rest_framework import permissions
 from django.shortcuts import get_object_or_404
 from hometask.models import Hometask
+from homework.models import Homework
 
 
 class IsStudent(permissions.BasePermission):
@@ -26,3 +27,12 @@ class IsTeacher(permissions.BasePermission):
         is_teacher = request.user in task.lecture.course.teachers.all()
 
         return is_teacher
+
+
+class IsTeacherOrHomeworkOwner(permissions.BasePermission):
+    def has_permission(self, request, view):
+        homework = get_object_or_404(Homework, id=request.session['homework'])
+        is_teacher = request.user in homework.hometask.lecture.course.teachers.all()
+        is_homework_owner = request.user == homework.homework_owner
+
+        return is_teacher or is_homework_owner

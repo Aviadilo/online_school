@@ -40,3 +40,12 @@ class HomeworkMarkDetailView(generics.UpdateAPIView):
     serializer_class = HomeworkMarkSerializer
     queryset = Homework.objects.all()
     permission_classes = (IsAuthenticated, IsTeacher)
+
+
+class CommentCreateView(generics.CreateAPIView):
+    serializer_class = CommentCreateSerializer
+    permission_classes = (IsAuthenticated, IsTeacherOrHomeworkOwner)
+
+    def perform_create(self, serializer):
+        homework = get_object_or_404(Homework, id=self.request.session['homework'])
+        serializer.save(homework=homework)
