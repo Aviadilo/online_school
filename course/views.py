@@ -1,4 +1,4 @@
-from rest_framework import generics
+from rest_framework import generics, filters
 from .serializers import *
 from .models import Course
 from rest_framework.permissions import IsAuthenticated
@@ -31,6 +31,9 @@ class CourseUsersView(generics.RetrieveUpdateAPIView):
 class CourseListView(generics.ListAPIView):
     serializer_class = CourseListSerializer
     permission_classes = (IsAuthenticated, IsOwnerOrReadCourseOnly)
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['name']
+    ordering_fields = ['name', 'course_owner__username']
 
     def get_queryset(self):
         user = self.request.user

@@ -1,6 +1,5 @@
-from rest_framework import generics
+from rest_framework import generics, filters
 from .serializers import *
-from .models import Homework
 from rest_framework.permissions import IsAuthenticated
 from .permissions import *
 from django.shortcuts import get_object_or_404
@@ -18,11 +17,13 @@ class HomeworkCreateView(generics.CreateAPIView):
 class HomeworkListView(generics.ListAPIView):
     serializer_class = HomeworkListSerializer
     permission_classes = (IsAuthenticated, IsTeacher)
-    queryset = Homework.objects.all()
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['homework_owner__username']
+    ordering_fields = ['mark']
 
     def get_queryset(self):
         task = get_object_or_404(Hometask, id=self.request.session['task'])
-        return Homework.objects.filter(hometask=task)
+        return Homework.objects.filter(hometask=task).order_by('mark')
 
 
 class HomeworkDetailView(generics.RetrieveUpdateDestroyAPIView):
