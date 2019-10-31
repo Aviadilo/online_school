@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Homework
+from homework.models import Homework, Comment
 from hometask.models import Hometask
 from course.serializers import UserSerializer
 
@@ -28,13 +28,21 @@ class HometaskSerializer(serializers.ModelSerializer):
         fields = ('id', 'task_body', 'possible_max_mark')
 
 
+class CommentSerializer(serializers.ModelSerializer):
+    comment_owner = UserSerializer(read_only=True)
+    class Meta:
+        model = Comment
+        fields = ('id', 'comment_owner', 'comment', 'created_date')
+
+
 class HomeworkDetailSerializer(serializers.ModelSerializer):
     homework_owner = UserSerializer(read_only=True)
     hometask = HometaskSerializer(read_only=True)
+    homework_comments = CommentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Homework
-        fields = ('homework_owner', 'hometask', 'homework_file', 'mark', 'created_date', 'updated_date')
+        fields = ('homework_owner', 'hometask', 'homework_file', 'mark', 'homework_comments', 'created_date', 'updated_date')
         read_only_fields = ['hometask', 'mark']
 
 
