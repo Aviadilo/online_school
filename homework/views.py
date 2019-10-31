@@ -1,7 +1,6 @@
-from rest_framework import generics, exceptions
+from rest_framework import generics
 from .serializers import *
 from .models import Homework
-from hometask.models import Hometask
 from rest_framework.permissions import IsAuthenticated
 from .permissions import *
 from django.shortcuts import get_object_or_404
@@ -9,29 +8,21 @@ from django.shortcuts import get_object_or_404
 
 class HomeworkCreateView(generics.CreateAPIView):
     serializer_class = HomeworkCreateSerializer
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, IsStudent)
 
     def perform_create(self, serializer):
         task = get_object_or_404(Hometask, id=self.request.session['task'])
-        if self.request.user in task.lecture.course.students.all():
-            serializer.save(hometask=task)
-        else:
-            raise exceptions.PermissionDenied()
+        serializer.save(hometask=task)
 
 
 class HomeworkListView(generics.ListAPIView):
     serializer_class = HomeworkListSerializer
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, IsTeacher)
     queryset = Homework.objects.all()
 
     def get_queryset(self):
         task = get_object_or_404(Hometask, id=self.request.session['task'])
-        is_course_owner = self.request.user == task.lecture.course.course_owner
-        is_teacher = self.request.user in task.lecture.course.teachers.all()
-        if is_course_owner or is_teacher:
-            return Homework.objects.filter(hometask=task)
-        else:
-            raise exceptions.PermissionDenied()
+        return Homework.objects.filter(hometask=task)
 
 
 class HomeworkDetailView(generics.RetrieveUpdateDestroyAPIView):
