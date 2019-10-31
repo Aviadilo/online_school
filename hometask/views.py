@@ -7,21 +7,17 @@ from .permissions import *
 
 class TaskCreateView(generics.CreateAPIView):
     serializer_class = TaskCreateSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, IsTeacher)
 
     def perform_create(self, serializer):
         lecture = Lecture.objects.get(id=self.request.session['lecture'])
-
-        if self.request.user == lecture.lecture_owner:
-            serializer.save(lecture=lecture)
-        else:
-            raise exceptions.PermissionDenied()
+        serializer.save(lecture=lecture)
 
 
 class TaskDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TaskDetailSerializer
     queryset = Hometask.objects.all()
-    permission_classes = (IsAuthenticated, IsOwnerOrReadTaskOnly)
+    permission_classes = (IsAuthenticated, IsTeacherOrReadTaskOnly)
 
     def get_object(self):
         obj = super().get_object()

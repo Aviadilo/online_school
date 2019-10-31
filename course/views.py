@@ -36,4 +36,4 @@ class CourseListView(generics.ListAPIView):
         user = self.request.user
         return Course.objects.filter(Q(course_owner=user) |
                                      Q(students=user) |
-                                     Q(teachers=user)).order_by('name')
+                                     Q(teachers=user)).distinct().order_by('name')

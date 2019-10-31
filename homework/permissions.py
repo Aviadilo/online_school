@@ -15,6 +15,5 @@ class IsOwnerOrReadHomeworkOnly(permissions.BasePermission):
 class IsTeacher(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         is_teacher = request.user in obj.hometask.lecture.course.teachers.all()
-        is_course_owner = request.user == obj.hometask.lecture.course.course_owner
 
-        return is_teacher or is_course_owner
+        return is_teacher
