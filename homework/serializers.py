@@ -43,3 +43,10 @@ class HomeworkMarkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Homework
         fields = ('mark', )
+
+    def validate(self, attrs):
+        homework_id = self.context['request'].session['homework']
+        max_mark = Homework.objects.values('hometask__possible_max_mark').get(id=homework_id)['hometask__possible_max_mark']
+        if attrs['mark'] > max_mark:
+            raise serializers.ValidationError("Mark cannot be more than {}".format(max_mark))
+        return attrs
