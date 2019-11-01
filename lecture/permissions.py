@@ -1,10 +1,12 @@
 from rest_framework import permissions
 from course.models import Course
+from django.shortcuts import get_object_or_404
 
 
 class IsTeacher(permissions.BasePermission):
     def has_permission(self, request, view):
-        course = Course.objects.get(id=request.session['course'])
+        course_id = request.session.get('course')
+        course = get_object_or_404(Course, id=course_id)
         is_teacher = request.user in course.teachers.all()
 
         return is_teacher

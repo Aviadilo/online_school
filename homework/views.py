@@ -10,7 +10,8 @@ class HomeworkCreateView(generics.CreateAPIView):
     permission_classes = (IsAuthenticated, IsStudent)
 
     def perform_create(self, serializer):
-        task = get_object_or_404(Hometask, id=self.request.session['task'])
+        task_id = self.request.session.get('task')
+        task = get_object_or_404(Hometask, id=task_id)
         serializer.save(hometask=task)
 
 
@@ -22,7 +23,8 @@ class HomeworkListView(generics.ListAPIView):
     ordering_fields = ['mark']
 
     def get_queryset(self):
-        task = get_object_or_404(Hometask, id=self.request.session['task'])
+        task_id = self.request.session.get('task')
+        task = get_object_or_404(Hometask, id=task_id)
         return Homework.objects.filter(hometask=task).order_by('mark')
 
 
@@ -48,5 +50,6 @@ class CommentCreateView(generics.CreateAPIView):
     permission_classes = (IsAuthenticated, IsTeacherOrHomeworkOwner)
 
     def perform_create(self, serializer):
-        homework = get_object_or_404(Homework, id=self.request.session['homework'])
+        homework_id = self.request.session.get('homework')
+        homework = get_object_or_404(Homework, id=homework_id)
         serializer.save(homework=homework)

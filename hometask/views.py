@@ -1,8 +1,9 @@
-from rest_framework import generics, exceptions
+from rest_framework import generics
 from .serializers import *
 from .models import Hometask
 from rest_framework.permissions import IsAuthenticated
 from .permissions import *
+from django.shortcuts import get_object_or_404
 
 
 class TaskCreateView(generics.CreateAPIView):
@@ -10,7 +11,8 @@ class TaskCreateView(generics.CreateAPIView):
     permission_classes = (IsAuthenticated, IsTeacher)
 
     def perform_create(self, serializer):
-        lecture = Lecture.objects.get(id=self.request.session['lecture'])
+        lecture_id = self.request.session.get('lecture')
+        lecture = get_object_or_404(Lecture, id=lecture_id)
         serializer.save(lecture=lecture)
 
 

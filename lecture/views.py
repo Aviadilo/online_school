@@ -3,6 +3,7 @@ from .serializers import *
 from .models import Lecture
 from rest_framework.permissions import IsAuthenticated
 from .permissions import *
+from django.shortcuts import get_object_or_404
 
 
 class LectureCreateView(generics.CreateAPIView):
@@ -10,7 +11,8 @@ class LectureCreateView(generics.CreateAPIView):
     permission_classes = (IsAuthenticated, IsTeacher)
 
     def perform_create(self, serializer):
-        course = Course.objects.get(id=self.request.session['course'])
+        course_id = self.request.session.get('course')
+        course = get_object_or_404(Course, id=course_id)
         serializer.save(course=course)
 
 
